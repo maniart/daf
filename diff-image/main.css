@@ -1,0 +1,32 @@
+body {
+	font-family: sans-serif;
+	color: #000;
+	overflow: hidden;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+#webcam {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px solid #ccc;
+	display: none;
+
+}
+#canvas {
+	width: 100%;
+	height: 100%;
+	float: left;
+}
+#normal-image,
+#diff-image {
+	position: absolute;
+	top: 0;
+	width: 320px;
+	height: 240px;
+}
+#normal-image { left: 0; }
+#diff-image { right: 0; }

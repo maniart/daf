@@ -48,7 +48,7 @@ var app = (function(w, d) {
 
 	var zibast = new Word(
 		{
-			x: 1/8*3*DOM.canvas.width, 
+			x: 1/7*2*DOM.canvas.width, 
 			y: 1/8*3*DOM.canvas.height
 		},
 		{ 
@@ -59,7 +59,7 @@ var app = (function(w, d) {
 		);
 	var agar = new Word(
 		{
-			x: 1/8*4*DOM.canvas.width, 
+			x: 1/7*5*DOM.canvas.width, 
 			y: 1/8*3*DOM.canvas.height
 		},
 		{ 
@@ -70,7 +70,7 @@ var app = (function(w, d) {
 		);
 	var ke = new Word(
 		{
-			x: 1/8*5*DOM.canvas.width, 
+			x: 1/7*4*DOM.canvas.width, 
 			y: 1/8*3*DOM.canvas.height
 		},
 		{ 
@@ -81,18 +81,18 @@ var app = (function(w, d) {
 		);
 	var bihodeh = new Word(
 		{
-			x: 1/8*4.6*DOM.canvas.width, 
+			x: 1/7*3.6*DOM.canvas.width, 
 			y: 1/8*3*DOM.canvas.height
 		},
 		{ 
-			w: 64, 
-			h: 41
+			w: 97, 
+			h: 38
 		},
 			'img/bihodeh.png'
 		);
 	var shab = new Word(
 		{
-			x: 1/8*2.4*DOM.canvas.width, 
+			x: 1/7*1*DOM.canvas.width, 
 			y: 1/8*3*DOM.canvas.height
 		},
 		{ 
@@ -195,12 +195,12 @@ var app = (function(w, d) {
 			canvasCtx.stroke();
 			
 			canvasCtx.closePath();
-			var ax = dx / (args.minDist * 20000),
-				ay = dy / (args.minDist * 20000);
-			p1.vx -= (args.minDist / Math.pow(100,2)) * ax;
-			p1.vy -= (args.minDist / Math.pow(100,2)) * ay;	
-			p2.vx += (args.minDist / Math.pow(100,2)) * ax;
-			p2.vy += (args.minDist / Math.pow(100,2)) * ay;
+			var ax = dx / (args.minDist * 1000),
+				ay = dy / (args.minDist * 1000);
+			p1.vx -= (args.minDist / Math.pow(100,.5)) * ax;
+			p1.vy -= (args.minDist / Math.pow(100,.5)) * ay;	
+			p2.vx += (args.minDist / Math.pow(100,.5)) * ax;
+			p2.vy += (args.minDist / Math.pow(100,.5)) * ay;
 		}	
 	};
 
@@ -208,7 +208,7 @@ var app = (function(w, d) {
 		var dx = p1.x - p2.x,
 			dy = p1.y - p2.y;
 		dist = Math.sqrt(dx * dx + dy * dy);
-		if (dist <= args.minDist) {
+		if (dist <= args.minDist*5) {
 			canvasCtx.beginPath();
 			canvasCtx.strokeStyle = args.setColor();
 			canvasCtx.lineWidth = args.lineWidth;
@@ -217,11 +217,11 @@ var app = (function(w, d) {
 			canvasCtx.stroke();
 			
 			if (p1 instanceof Particle) {
-				p1.radius = 300;
+				p1.radius = 10;
 				p1.minDist = 100;
 				p1.opacity = 1;
 			} else if (p2 instanceof Particle) {
-				p2.radius = 3;
+				p2.radius = 5;
 				p2.minDist = 100;
 				p2.opacity = 1;
 			}
@@ -229,11 +229,11 @@ var app = (function(w, d) {
 			
 		} else {
 			if (p1 instanceof Particle) {
-				p1.radius = .2;
+				p1.radius = 1;
 				p1.minDist = 50;
 				p1.opacity = .5;
 			} else if (p2 instanceof Particle) {
-				p2.radius = .2;
+				p2.radius = 1;
 				p1.minDist = 50;
 				p1.opacity = .5;
 			}
@@ -249,7 +249,7 @@ var app = (function(w, d) {
 
 	// Create the particle system and setup DAT gui
 	function setup(args) {
-		for (var i = 300; i >= 0; i--) {
+		for (var i = 500; i >= 0; i--) {
 			var p = new Particle(args);
 			particles.push(p);
 		};
@@ -325,7 +325,7 @@ var app = (function(w, d) {
 		update();
 		canvasCtx.drawImage(images.agar, 1/7*5*DOM.canvas.width, 1/8*3*DOM.canvas.height, 51, 43);
 		canvasCtx.drawImage(images.ke, 1/7*4*DOM.canvas.width, 1/8*3*DOM.canvas.height, 40, 29);
-		canvasCtx.drawImage(images.bihodeh, 1/7*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 64, 41);
+		canvasCtx.drawImage(images.bihodeh, 1/7*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 97, 38);
 
 		canvasCtx.drawImage(images.zibast, 1/7*2*DOM.canvas.width, 1/8*3*DOM.canvas.height, 103, 41);
 		
@@ -364,7 +364,7 @@ var app = (function(w, d) {
 		loadImages(typeSources, function(images) {
     		canvasCtx.drawImage(images.agar, -100, -100, 50, 42);
     		canvasCtx.drawImage(images.ke, -100, -100, 39, 29);
-    		canvasCtx.drawImage(images.bihodeh, -100, -100, 64, 41);
+    		canvasCtx.drawImage(images.bihodeh, -100, -100, 97, 38);
     		canvasCtx.drawImage(images.zibast,  800, 800, 102, 41);
     		canvasCtx.drawImage(images.shab, -100, -100, 61, 35);
     	});
@@ -508,7 +508,7 @@ var app = (function(w, d) {
 					case 4:
 						ke.isHit = true;
 					break;
-						case 5:
+					case 5:
 					agar.isHit = true;
 						
 				}

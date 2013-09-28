@@ -159,13 +159,22 @@ var app = (function (w, d, undefined) {
 		requestAnimFrame(update);
 	};
 
+
+	//rotate text
+	
+	
+	
+
 	// init method, jumpstarting the whole module 
 	function init() {
+		rotateText();
 		console.log('app init');
 		setupDimensions();
 		mirrorVideo();
 		initCapture();
 		update();
+
+		
 	}; 
 
 	
@@ -178,3 +187,10 @@ var app = (function (w, d, undefined) {
 })(window, document, undefined);
 
 window.onload = app.init;
+
+function rotateText() {
+		console.log('rotate');
+};
+window.setInterval(function() {
+			rotateText();
+		}, 1000);	

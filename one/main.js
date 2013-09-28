@@ -1,4 +1,4 @@
-var app = (function(w, d) {
+var app = (function(w, d, $) {
 
 	'use strict';
 	
@@ -323,13 +323,14 @@ var app = (function(w, d) {
 			//canvasCtx.drawImage(images.shab, particles[4].x, particles[4].y, 61, 35);
 		};
 		update();
-		canvasCtx.drawImage(images.agar, 1/7*5*DOM.canvas.width, 1/8*3*DOM.canvas.height, 51, 43);
-		canvasCtx.drawImage(images.ke, 1/7*4*DOM.canvas.width, 1/8*3*DOM.canvas.height, 40, 29);
-		canvasCtx.drawImage(images.bihodeh, 1/7*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 97, 38);
+		/* hack: drawing words in html for exhibition shhhhhhh! */
+		//canvasCtx.drawImage(images.agar, 1/7*5*DOM.canvas.width, 1/8*3*DOM.canvas.height, 51, 43);
+		//canvasCtx.drawImage(images.ke, 1/7*4*DOM.canvas.width, 1/8*3*DOM.canvas.height, 40, 29);
+		//canvasCtx.drawImage(images.bihodeh, 1/7*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 97, 38);
 
-		canvasCtx.drawImage(images.zibast, 1/7*2*DOM.canvas.width, 1/8*3*DOM.canvas.height, 103, 41);
+		//canvasCtx.drawImage(images.zibast, 1/7*2*DOM.canvas.width, 1/8*3*DOM.canvas.height, 103, 41);
 		
-		canvasCtx.drawImage(images.shab, 1/7*1*DOM.canvas.width, 1/8*3*DOM.canvas.height, 64, 41);	
+		//canvasCtx.drawImage(images.shab, 1/7*1*DOM.canvas.width, 1/8*3*DOM.canvas.height, 64, 41);	
 	};
 
 	// Loop function
@@ -340,6 +341,7 @@ var app = (function(w, d) {
 		drawVideo();
 		blend();
 		checkAreas();
+		rotateVerse();
 		requestAnimFrame(loop);
 		
 	};
@@ -359,6 +361,7 @@ var app = (function(w, d) {
 
 	// Initialize everything
 	function init() {
+		verse1();
 		setup(args);
 		mirrorVideo();
 		loadImages(typeSources, function(images) {
@@ -372,6 +375,9 @@ var app = (function(w, d) {
 		attachEvents();
 		initCapture();
 		loop();
+
+		//rotate verses
+		//w.setInterval(rotateVerse(), 1000);
 	};
 
 	/* BEGIN image processing stuff */
@@ -600,13 +606,53 @@ var app = (function(w, d) {
 			
 		});
 	};
+	var isVerse1 = false,
+		isVerse2 = false,
+		isVerse3 = false;
+	// rotate text
+	function verse1() {
+		$('.type').animate({opacity : 0}, 10000);
+		$('.agar, .ke, .bihoodeh, .zibast, .shab').animate({opacity : .5}, 1000);
+		isVerse1 = true;
+		isVerse2 = false;
+		isVerse3 = false;
+	};
+	function verse2() {
+		$('.type').animate({opacity : 0}, 10000);
+		$('.baraye, .che, .zibast, .shab').animate({opacity : .5}, 1000);	
+		isVerse2 = true;
+		isVerse3 = false;
+		isVerse1 = false;
+	};
+	function verse3() {
+		$('.type').animate({opacity : 0}, 10000);
+		$('.baraye, .ke, .zibast, .question').animate({opacity : .5}, 1000);	
+		isVerse3 = true;
+		isVerse2 = false;
+		isVerse1 = false;
+	};
+
+	function rotateVerse() {
+		if(isVerse1) {
+			verse2();
+		} else if(isVerse2) {
+			verse3();
+		} else if(isVerse3) {
+			verse1();
+		} else {
+			verse1();
+		}
+		console.log('vers1: ' + isVerse1);
+		console.log('vers2: ' + isVerse2);
+		console.log('vers3: ' + isVerse3);
+	};
 
 	// Module API
 	return {
 		init : init
 	};
 
-})(window, document);
+})(window, document, jQuery);
 
 // Initialize app on window load
 window.onload = app.init;

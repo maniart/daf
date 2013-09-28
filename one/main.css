@@ -27,6 +27,8 @@ body {
 	top: 0;
 	width: 320px;
 	height: 240px;
+	/* Hiding for the exhibition */
+	display: none;
 	-webkit-transition: all 300ms ease-out;
 	-moz-transition: all 300ms ease-out;
 	-ms-transition: all 300ms ease-out;
@@ -49,4 +51,93 @@ body {
 	height: 20px;
 	text-align: center;
 	cursor: pointer;
+	/* Hiding for the exhibition */
+	display: none;
+}
+.close-button {
+	/* Hiding for the exhibition */
+	color: black!important;
+
+}
+.type {
+	position: absolute;
+	display: block;
+	opacity: .6;
+	background: 0 0 no-repeat transparent;
+}
+.agar {
+	top: 280px;
+	right: 330px;
+	width: 51px;
+	height: 43px;
+	background-image: url('img/agar.png');
+}
+.baraye {
+	top: 280px;
+	right: 330px;
+	width: 62px;
+	height: 36px;
+	background-image: url('img/baraye.png');
+}
+.ke {
+	top: 280px;
+	right: 520px;
+	width: 45px;
+	height: 29px;
+	background-image: url('img/ke.png');
+}
+.che {
+	top: 280px;
+	right: 520px;
+	width: 48px;
+	height: 34px;
+	background-image: url('img/che.png');
+}
+.bihoodeh {
+	top: 280px;
+	right: 600px;
+	width: 97px;
+	height: 38px;
+	background-image: url('img/bihodeh.png');
+}
+.zibast {
+	top: 280px;
+	right: 830px;
+	width: 108px;
+	height: 42px;
+	background-image: url('img/zibast.png');
+}
+.question {
+	top: 280px;
+	left: 130px;
+	width: 15px;
+	height: 30px;
+	background-image: url('img/questionmark.png');
+}
+.shab {
+	top: 280px;
+	right: 1050px;
+	width: 62px;
+	height: 36px;
+	background-image: url('img/shab.png');
+}
+.subtitle {
+	background: black;
+	text-shadow: 0 -1px 0 #111;
+	color: white;
+	opacity: .5;
+	width: auto;
+	z-index: 999;
+	position: absolute;
+	top: 680px;
+	left: 0;
+	z-index: 999;
+	display: block;
+	text-align: left;
+	line-height: 19px;
+	height: auto;
+	text-align: center;
+	cursor: pointer;
+	background: black;
+	display: block;
 }

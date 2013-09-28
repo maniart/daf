@@ -168,6 +168,8 @@ var app = (function (w, d, undefined) {
 		update();
 	}; 
 
+	
+
 	// public api
 	return {
 		init : init

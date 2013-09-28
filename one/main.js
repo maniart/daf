@@ -22,10 +22,88 @@ var app = (function(w, d) {
 	
 		// CONST
 		W = w.innerWidth,
-		H = w.innerHeight,
-		
+		H = w.innerHeight;
+	
+	// Setting up the stage
+	DOM.canvas.width = W;
+	DOM.canvas.height = H;
+	canvasCtx.fillStyle = 'rgba(0,0,0,1)';
+	canvasCtx.fillRect(0, 0, W, H);
+
+		// Booleans
+	var isHit = {};
+		isHit.zibast = false;
+
+		// Word constructors
+	var Word = function(coords, dims, source) {
+		this.source = source;
+		this.w = dims.w;
+		this.h = dims.h;
+		this.x = coords.x;
+		this.y = coords.y;
+	};
+	// no word is hit by default
+	Word.prototype.isHit = false;
+
+
+	var zibast = new Word(
+		{
+			x: 1/8*3*DOM.canvas.width, 
+			y: 1/8*3*DOM.canvas.height
+		},
+		{ 
+			w: 102, 
+			h: 41
+		},
+			'img/zibast.png'
+		);
+	var agar = new Word(
+		{
+			x: 1/8*4*DOM.canvas.width, 
+			y: 1/8*3*DOM.canvas.height
+		},
+		{ 
+			w: 51, 
+			h: 43
+		},
+			'img/agar.png'
+		);
+	var ke = new Word(
+		{
+			x: 1/8*5*DOM.canvas.width, 
+			y: 1/8*3*DOM.canvas.height
+		},
+		{ 
+			w: 40, 
+			h: 29
+		},
+			'img/ke.png'
+		);
+	var bihodeh = new Word(
+		{
+			x: 1/8*4.6*DOM.canvas.width, 
+			y: 1/8*3*DOM.canvas.height
+		},
+		{ 
+			w: 64, 
+			h: 41
+		},
+			'img/bihodeh.png'
+		);
+	var shab = new Word(
+		{
+			x: 1/8*2.4*DOM.canvas.width, 
+			y: 1/8*3*DOM.canvas.height
+		},
+		{ 
+			w: 62, 
+			h: 36
+		},
+			'img/shab.png'
+		);
+	
 		// Particle System vars
-		particles = [],	
+	var	particles = [],	
 		dist,
 
 		// Image and Typography related vars
@@ -40,9 +118,9 @@ var app = (function(w, d) {
 
 		// Dat gui controlled arguments
 		args = {
-			radius : .1,
-			minDist : 100,
-			blur : 3,
+			radius : 1,
+			minDist : 50,
+			blur : 5,
 			lineWidth : .2,
 			gitAddress : 'https://github.com/maniart/lab/tree/master/particles-1',
 			opacity: .2,
@@ -74,11 +152,7 @@ var app = (function(w, d) {
 		};
 
 	
-	// Setting up the stage
-	DOM.canvas.width = W;
-	DOM.canvas.height = H;
-	canvasCtx.fillStyle = 'rgba(0,0,0,1)';
-	canvasCtx.fillRect(0, 0, W, H);
+	
 	
 	// Shared method : draw
 	Particle.prototype.draw = function() {
@@ -121,14 +195,51 @@ var app = (function(w, d) {
 			canvasCtx.stroke();
 			
 			canvasCtx.closePath();
-			var ax = dx / (args.minDist * 20),
-				ay = dy / (args.minDist * 20);
+			var ax = dx / (args.minDist * 20000),
+				ay = dy / (args.minDist * 20000);
 			p1.vx -= (args.minDist / Math.pow(100,2)) * ax;
 			p1.vy -= (args.minDist / Math.pow(100,2)) * ay;	
 			p2.vx += (args.minDist / Math.pow(100,2)) * ax;
 			p2.vy += (args.minDist / Math.pow(100,2)) * ay;
 		}	
 	};
+
+	function shine(p1, p2) {
+		var dx = p1.x - p2.x,
+			dy = p1.y - p2.y;
+		dist = Math.sqrt(dx * dx + dy * dy);
+		if (dist <= args.minDist) {
+			canvasCtx.beginPath();
+			canvasCtx.strokeStyle = args.setColor();
+			canvasCtx.lineWidth = args.lineWidth;
+			canvasCtx.moveTo(p1.x, p1.y);
+			canvasCtx.lineTo(p2.x, p2.y);
+			canvasCtx.stroke();
+			
+			if (p1 instanceof Particle) {
+				p1.radius = 300;
+				p1.minDist = 100;
+				p1.opacity = 1;
+			} else if (p2 instanceof Particle) {
+				p2.radius = 3;
+				p2.minDist = 100;
+				p2.opacity = 1;
+			}
+			canvasCtx.closePath();
+			
+		} else {
+			if (p1 instanceof Particle) {
+				p1.radius = .2;
+				p1.minDist = 50;
+				p1.opacity = .5;
+			} else if (p2 instanceof Particle) {
+				p2.radius = .2;
+				p1.minDist = 50;
+				p1.opacity = .5;
+			}
+		}	
+	};
+
 
 	// Utility function: clear the screen
 	function clear() {
@@ -138,7 +249,7 @@ var app = (function(w, d) {
 
 	// Create the particle system and setup DAT gui
 	function setup(args) {
-		for (var i = 200; i >= 0; i--) {
+		for (var i = 300; i >= 0; i--) {
 			var p = new Particle(args);
 			particles.push(p);
 		};
@@ -172,10 +283,32 @@ var app = (function(w, d) {
 
 			avoidEdges(particle1);
 
+			if (zibast.isHit) {
+				//console.log('zibast is hit');		
+				shine(zibast, particle1);
+				console.log('zibast is hit');
+			} else if (agar.isHit) {
+				console.log('agar is hit');
+				shine(agar, particle1);
+			} else if (ke.isHit) {
+				shine(ke, particle1);
+				console.log('ke is hit');
+			} else if (bihodeh.isHit) {
+				console.log('bihodeh is hit');
+				shine(bihodeh, particle1);
+			} else if (shab.isHit) {
+				console.log('shab is hit');
+				shine(shab, particle1);
+			}
+
 			for(var j = i + 1; j < particles.length; j++) {
 				particle2 = particles[j];
 				distance(particle1, particle2);
+
 			}
+			
+			
+			
 		}
 	};
 
@@ -187,20 +320,28 @@ var app = (function(w, d) {
 			//canvasCtx.drawImage(images.agar, particles[0].x, particles[0].y, 25, 21);
 			//canvasCtx.drawImage(images.ke, particles[1].x, particles[1].y, 39, 29);
 			//canvasCtx.drawImage(images.bihodeh, particles[2].x, particles[2].y, 64, 41);
-			canvasCtx.drawImage(images.zibast, 1/8*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 102, 41);
 			//canvasCtx.drawImage(images.shab, particles[4].x, particles[4].y, 61, 35);
 		};
-		update();	
+		update();
+		canvasCtx.drawImage(images.agar, 1/7*5*DOM.canvas.width, 1/8*3*DOM.canvas.height, 51, 43);
+		canvasCtx.drawImage(images.ke, 1/7*4*DOM.canvas.width, 1/8*3*DOM.canvas.height, 40, 29);
+		canvasCtx.drawImage(images.bihodeh, 1/7*3*DOM.canvas.width, 1/8*3*DOM.canvas.height, 64, 41);
+
+		canvasCtx.drawImage(images.zibast, 1/7*2*DOM.canvas.width, 1/8*3*DOM.canvas.height, 103, 41);
+		
+		canvasCtx.drawImage(images.shab, 1/7*1*DOM.canvas.width, 1/8*3*DOM.canvas.height, 64, 41);	
 	};
 
 	// Loop function
 	function loop() {
 		draw();
 		//drawAreasToBeChecked();
+		//console.log('is hit zibast: ', zibast.isHit);
 		drawVideo();
 		blend();
 		checkAreas();
 		requestAnimFrame(loop);
+		
 	};
 
 	// Setup Dat Gui
@@ -208,7 +349,7 @@ var app = (function(w, d) {
 	    var gui = new dat.GUI();
 	    gui.remember(args);
 	    gui.add(args, 'radius', 0, 5).step(.1);
-	    gui.add(args, 'minDist', 100, 200).step(1);
+	    gui.add(args, 'minDist', 10, 200).step(10);
 		gui.add(args, 'lineWidth', .1, 2).step(.1);
 		gui.add(args, 'blur', 1, 100).step(1);
 		gui.add(args, 'opacity', 0, 1).step(.1);
@@ -224,9 +365,10 @@ var app = (function(w, d) {
     		canvasCtx.drawImage(images.agar, -100, -100, 50, 42);
     		canvasCtx.drawImage(images.ke, -100, -100, 39, 29);
     		canvasCtx.drawImage(images.bihodeh, -100, -100, 64, 41);
-    		canvasCtx.drawImage(images.zibast, -100, -100, 102, 41);
+    		canvasCtx.drawImage(images.zibast,  800, 800, 102, 41);
     		canvasCtx.drawImage(images.shab, -100, -100, 61, 35);
     	});
+		//console.log(zibast);
 		attachEvents();
 		initCapture();
 		loop();
@@ -320,8 +462,8 @@ var app = (function(w, d) {
 	};
 
 	function drawAreasToBeChecked() {	
-		for (var r=0; r<8; ++r) {
-			canvasCtx.fillRect(1/8*3*canvas.width, 1/8*3*webcam.height, canvas.width/8, 1/8*webcam.height);	
+		for (var r=1; r<6; ++r) {
+			canvasCtx.fillRect(1/7*r*canvas.width, 1/8*3*webcam.height, canvas.width/8, 1/7*webcam.height);	
 			canvasCtx.fill();
 		}
 	};
@@ -329,9 +471,9 @@ var app = (function(w, d) {
 	// are we hitting the designated areas?
 	function checkAreas() {
 		// loop over the note areas
-		for (var r=0; r<8; ++r) {
+		for (var r=1; r<6; ++r) {
 			//var blendedData = diffImageCtx.getImageData(1/8*r*webcam.width, 1/8*r*webcam.height, webcam.width/8, 1/8*webcam.height);
-			var blendedData = diffImageCtx.getImageData(1/8*3*webcam.width, 1/8*3*webcam.height, webcam.width/8, 1/8*webcam.height);
+			var blendedData = diffImageCtx.getImageData(1/7*r*webcam.width, 1/8*3*webcam.height, webcam.width/8, 1/7*webcam.height);
 			var i = 0;
 			var average = 0;
 			// loop over the pixels
@@ -352,7 +494,44 @@ var app = (function(w, d) {
 				//	notes[r].visual.css({opacity:1});
 				//	notes[r].visual.animate({opacity:0}, 700);
 				//}
-				console.log('hit');
+				console.log('hit: ' + r);
+				switch(r) {
+					case 1:
+						shab.isHit = true;
+					break;
+					case 2:
+						zibast.isHit = true;
+					break;
+					case 3: 
+						bihodeh.isHit = true;
+					break;
+					case 4:
+						ke.isHit = true;
+					break;
+						case 5:
+					agar.isHit = true;
+						
+				}
+				
+			} else {
+				switch(r) {
+					case 1:
+						shab.isHit = false;
+					break;
+					case 2:
+						zibast.isHit = false;
+					break;
+					case 3: 
+						bihodeh.isHit = false;
+					break;
+					case 4:
+						ke.isHit = false;
+					break;
+					case 5:
+						agar.isHit = false;
+					break;
+						
+				}
 			}
 		}
 	}
@@ -411,7 +590,6 @@ var app = (function(w, d) {
 		canvas.addEventListener('mousemove', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
 			
-			console.log();
 			emitters[0].position = mousePos;
 			fields[0].position.x = mousePos.x - diff.x;
 			fields[0].position.y = mousePos.y;

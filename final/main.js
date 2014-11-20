@@ -45,7 +45,6 @@ var app = (function(w, d, $) {
 	// no word is hit by default
 	Word.prototype.isHit = false;
 
-
 	var zibast = new Word(
 		{
 			x: 1/7*2*DOM.canvas.width, 
@@ -476,9 +475,8 @@ var app = (function(w, d, $) {
 
 	// are we hitting the designated areas?
 	function checkAreas() {
-		// loop over the note areas
+		// loop over the areas
 		for (var r=1; r<6; ++r) {
-			//var blendedData = diffImageCtx.getImageData(1/8*r*webcam.width, 1/8*r*webcam.height, webcam.width/8, 1/8*webcam.height);
 			var blendedData = diffImageCtx.getImageData(1/7*r*webcam.width, 1/8*3*webcam.height, webcam.width/8, 1/7*webcam.height);
 			var i = 0;
 			var average = 0;
@@ -491,15 +489,6 @@ var app = (function(w, d, $) {
 			// calculate an average between of the color values of the note area
 			average = Math.round(average / (blendedData.data.length * 0.25));
 			if (average > 10) {
-				// over a small limit, consider that a movement is detected
-				// play a note and show a visual feedback to the user
-				//playSound(notes[r]);
-//				notes[r].visual.show();
-//				notes[r].visual.fadeOut();
-				//if(!notes[r].visual.is(':animated')) {
-				//	notes[r].visual.css({opacity:1});
-				//	notes[r].visual.animate({opacity:0}, 700);
-				//}
 				console.log('hit: ' + r);
 				switch(r) {
 					case 1:
@@ -601,8 +590,6 @@ var app = (function(w, d, $) {
 			fields[0].position.y = mousePos.y;
 			fields[1].position.x = mousePos.x + diff.x;
 			fields[1].position.y = mousePos.y;
-			//fields[0].position.y = mousePos.y - 100;
-
 			
 		});
 	};
